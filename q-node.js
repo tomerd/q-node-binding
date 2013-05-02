@@ -49,7 +49,7 @@ Q.q_connect(queue_ptr)
 // pointing to, so we must deref()
 var queue = queue_ptr.deref()
 
-/*
+
 var worker1 = ffi.Callback('void', [string_ptr], function (dataptr) 
 {
 	var data = dataptr.deref();
@@ -71,7 +71,7 @@ var observer1 = ffi.Callback('void', [string_ptr], function (dataptr)
 	console.log("node observer1 received '" + data + "'");
 });
 Q.q_observer(queue, "channel1", observer1)
-*/
+
 
 var jid = Q.q_post(queue, "channel1", "node 11", 0)
 jid = Q.q_post(queue, "channel1", "node 12", (new Date().getTime() / 1000 + 3))
@@ -79,7 +79,7 @@ jid = Q.q_post(queue, "channel1", "node 13", 0)
 
 setTimeout(function()
 {
-	var jid = Q.q_post(queue, "channel1", "node 21", 0)
+	var jid = Q.q_post(queue, "channel1", "node 21", (new Date().getTime() / 1000 + 3))
 	jid = Q.q_post(queue, "channel1", "node 22", 0)
 	jid = Q.q_post(queue, "channel1", "node 23", 0)
 
@@ -89,7 +89,7 @@ setTimeout(function()
 {
 	Q.q_disconnect(queue);
 	console.log("done");
-}, 5000);
+}, 7000);
 
 
 
