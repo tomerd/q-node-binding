@@ -51,7 +51,7 @@ exports.post = function(channel, data, at)
 	if (!channel) return;
 	if (!data) return;	
 	if (data === Object(data)) data = JSON.stringify(data);
-	if (!at) at = 0;
+	at = at ? at/1000 : 0;
 	var puid = ref.alloc(ref.types.CString);
 	libq.q_post(pq, channel, data, at, puid);
 	return puid.deref();

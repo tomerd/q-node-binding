@@ -31,7 +31,7 @@ process.stdin.once('data', function(input)
 	{
 		console.info(received + "/" +  total);
 		
-		if (recieved == total)
+		if (received == total)
 		{
 			console.info("done");
 			q.disconnect();
@@ -55,12 +55,12 @@ q.observer("channel1", function(data)
 });
 
 q.post("channel1", "node 11");
-q.post("channel1", "node 12", (new Date().getTime() / 1000 + 2));
+q.post("channel1", "node 12", (new Date().getTime() + 2000));
 q.post("channel1", "node 13");
 
 setTimeout(function()
 {
-	q.post("channel1", "node 21", (new Date().getTime() / 1000 + 2));
+	q.post("channel1", "node 21", (new Date().getTime() + 2000));
 	q.post("channel1", "node 22");
 	q.post("channel1", "node 23");
 
