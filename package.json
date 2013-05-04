@@ -1,11 +1,11 @@
 {
-	"name": "q-node",
+	"name": "node-q",
 	"version": "0.0.1",
 	"engines": 
 	{
 		"node": ">=0.6.0"
 	},
-	"main": "./q-node.js",
+	"main": "./node-q.js",
 	"dependencies": 
 	{
 		"ffi": "*",
