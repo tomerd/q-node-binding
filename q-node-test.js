@@ -1,38 +1,75 @@
 var q = require('./q-node');
 
-console.log('using q version %s...', q.version())
+console.info('using q version %s', q.version())
 
-q.connect(null)
-
-q.worker("channel1", function(data)
+process.stdin.resume();
+process.stdout.write("how many: ");
+ 
+process.stdin.once('data', function(input) 
 {
-	console.log("node worker 1 received '" + data + "'");
+	var total = input.toString().trim();
+	
+	q.connect(	/*{
+					driver: 'redis', 
+					host: '127.0.0.1' 
+				}*/);
+	
+	for (var index=0; index < total; index++)
+	{
+		var uid = q.post("channel1", "node " + index);
+		console.info("posted %s", uid);
+	}
+	
+	var recieved = 0;
+	q.worker("channel1", function(data)
+	{
+		recieved++;
+		console.info("node worker 1 received [%s]", data);
+	});
+	
+	setInterval(function()
+	{
+		console.info(recieved + "/" +  total);
+		
+		if (recieved == total)
+		{
+			console.info("done");
+			q.disconnect();
+			process.exit(0);
+		}
+		
+	}, 1000);
 });
 
+
+
+/*
 q.worker("channel1", function(data)
 {
-	console.log("node worker 2 received '" + data + "'");
+	console.log("node worker 2 received [%s]", data);
 });
 
 q.observer("channel1", function(data)
 {
-	console.log("node observer 1 received '" + data + "'");
+	console.log("node observer 1 received [%s]", data);
 });
 
-q.post("channel1", "node 11", 0);
+q.post("channel1", "node 11");
 q.post("channel1", "node 12", (new Date().getTime() / 1000 + 2));
-q.post("channel1", "node 13", 0);
+q.post("channel1", "node 13");
 
 setTimeout(function()
 {
 	q.post("channel1", "node 21", (new Date().getTime() / 1000 + 2));
-	q.post("channel1", "node 22", 0);
-	q.post("channel1", "node 23", 0);
+	q.post("channel1", "node 22");
+	q.post("channel1", "node 23");
 
 }, 4000);
 
 setTimeout(function()
 {
-	Q.q_disconnect(queue);
+	q.disconnect();
 	console.log("done");
-}, 30000);
+}, 3000);
+*/
+
