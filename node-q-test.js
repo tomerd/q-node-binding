@@ -20,16 +20,16 @@ process.stdin.once('data', function(input)
 		console.info("posted %s", uid);
 	}
 	
-	var recieved = 0;
+	var received = 0;
 	q.worker("channel1", function(data)
 	{
-		recieved++;
+		received++;
 		console.info("node worker 1 received [%s]", data);
 	});
 	
 	setInterval(function()
 	{
-		console.info(recieved + "/" +  total);
+		console.info(received + "/" +  total);
 		
 		if (recieved == total)
 		{
