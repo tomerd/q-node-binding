@@ -39,6 +39,9 @@ exports.connect = function(config)
 exports.post = function(channel, data, at)
 {
 	if (!pq) return;
+	if (!channel) return;
+	if (!data) return;	
+	if (data === Object(data)) data = JSON.stringify(data);
 	if (!at) at = 0;
 	var puid = ref.alloc(ref.types.CString);
 	libq.q_post(pq, channel, data, at, puid);
@@ -48,6 +51,7 @@ exports.post = function(channel, data, at)
 exports.worker = function(channel, worker)
 {
 	if (!pq) return;
+	if (!channel) return;
 	var q_worker = ffi.Callback('void', [ptr_string], function (pdata) 
 	{
 		var data = pdata.deref();
@@ -61,6 +65,7 @@ exports.worker = function(channel, worker)
 exports.observer = function(channel, observer)
 {
 	if (!pq) return;
+	if (!channel) return;
 	var q_observer = ffi.Callback('void', [ptr_string], function (pdata) 
 	{
 		var data = pdata.deref();

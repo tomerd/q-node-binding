@@ -5,7 +5,7 @@
 	{
 		"node": ">=0.6.0"
 	},
-	"main": "q-node",
+	"main": "./q-node.js",
 	"dependencies": 
 	{
 		"ffi": "*",
