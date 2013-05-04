@@ -1,3 +1,10 @@
+***************************************************************************************
+
+This project is work in progress. if you are interested in contributing, have comments
+please touch base via github
+
+***************************************************************************************
+
 ### about
 
 q is a queueing framework. the idea behind it is to provide a universal application interface that can be used across all
