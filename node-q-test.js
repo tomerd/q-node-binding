@@ -1,4 +1,4 @@
-var q = require('./q-node');
+var q = require('./node-q');
 
 console.info('using q version %s', q.version())
 
