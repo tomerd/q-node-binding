@@ -36,6 +36,15 @@ exports.connect = function(config)
 	pq = ppq.deref();
 }
 
+exports.disconnect= function()
+{
+	if (!pq) return;
+	libq.q_disconnect(pq);
+	pq = null;
+	workers = [];
+	observers = [];	
+}
+
 exports.post = function(channel, data, at)
 {
 	if (!pq) return;
@@ -74,14 +83,6 @@ exports.observer = function(channel, observer)
 	// https://github.com/rbranson/node-ffi/issues/84	
 	observers.push(q_observer); 
 	libq.q_observer(pq, channel, q_observer);
-}
-
-exports.disconnect= function()
-{
-	if (!pq) return;
-	libq.q_disconnect(pq);
-	workers = [];
-	observers = [];	
 }
 
 
