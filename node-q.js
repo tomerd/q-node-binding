@@ -12,10 +12,13 @@ var ptr_string = ref.refType(ref.types.CString);
 var libq = ffi.Library('libq', { 'q_version': [ 'string', [ ] ],
 								 'q_connect': [ 'void', [ ptr_ptr_q, 'string' ] ],
 								 'q_disconnect': [ 'void', [ ptr_q ] ],
-								 'q_post': [ 'string', [ ptr_q, 'string', 'string', 'long', ptr_string ]],
+								 'q_post': [ 'void', [ ptr_q, 'string', 'string', 'string', 'long', ptr_string ]],
+								 'q_update': [ 'bool', [ ptr_q, 'string', 'long' ]],
+								 'q_remove': [ 'bool', [ ptr_q, 'string' ]],
 								  // https://github.com/rbranson/node-ffi/issues/76
 								 'q_worker': [ 'void', [ ptr_q, 'string', 'pointer' ] ],
-								 'q_observer': [ 'void', [ ptr_q, 'string', 'pointer' ] ],	
+								 'q_observer': [ 'void', [ ptr_q, 'string', 'pointer' ] ],
+								 'q_flush': [ 'void', [ ptr_q ] ],	
 								});
 
 var pq = null;
@@ -36,7 +39,7 @@ exports.connect = function(config)
 	pq = ppq.deref();
 }
 
-exports.disconnect= function()
+exports.disconnect = function()
 {
 	if (!pq) return;
 	libq.q_disconnect(pq);
@@ -45,16 +48,32 @@ exports.disconnect= function()
 	observers = [];	
 }
 
-exports.post = function(channel, data, at)
+exports.post = function(channel, job)
 {
 	if (!pq) return;
 	if (!channel) return;
-	if (!data) return;	
-	if (data === Object(data)) data = JSON.stringify(data);
-	at = at ? at/1000 : 0;
+	if (!job) return;
+	if (!job.data) return;
+	var data = job.data === Object(job.data) ? JSON.stringify(job.data) : job.data;
+	var run_at = job.run_at ? job.run_at/1000 : 0;
 	var puid = ref.alloc(ref.types.CString);
-	libq.q_post(pq, channel, data, at, puid);
+	libq.q_post(pq, channel, job.uid, data, run_at, puid);
 	return puid.deref();
+}
+
+exports.update = function(uid, run_at)
+{
+	if (!pq) return;
+	if (!uid) return;
+	run_at = run_at ? run_at/1000 : 0;
+	return libq.q_update(pq, uid, run_at);
+}
+
+exports.remove = function(uid)
+{
+	if (!pq) return;
+	if (!uid) return;
+	return libq.q_remove(pq, uid);
 }
 
 exports.worker = function(channel, worker)
@@ -85,4 +104,10 @@ exports.observer = function(channel, observer)
 	libq.q_observer(pq, channel, q_observer);
 }
 
+// careful, flushes the queue!
+exports.flush = function()
+{
+	if (!pq) return;
+	libq.q_flush(pq);
+}
 
