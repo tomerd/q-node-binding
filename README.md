@@ -25,7 +25,7 @@ https://github.com/tomerd/q
 	var total = 100;
 	for (var index=0; index < total; index++)
 	{
-		var uid = q.post("channel1", "node " + index);
+		var uid = q.post("channel1", { data: "node " + index });
 		console.info("posted %s", uid);
 	}
 	
