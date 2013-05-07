@@ -114,8 +114,8 @@ exports.flush = function()
 function normalize_timestamp(timestamp)
 {
 	if (!timestamp) return 0;
-	if (isNumber(timestamp)) return timestamp/1000;
-	if (isDate(timestamp)) return timestamp.getTime()/1000;	
+	if (is_number(timestamp)) return timestamp/1000;
+	if (is_date(timestamp)) return timestamp.getTime()/1000;	
 	throw new Exception("invalid timestamp")
 }
 
