@@ -13,8 +13,8 @@ var libq = ffi.Library('libq', { 'q_version': [ 'string', [ ] ],
 								 'q_connect': [ 'void', [ ptr_ptr_q, 'string' ] ],
 								 'q_disconnect': [ 'void', [ ptr_q ] ],
 								 'q_post': [ 'void', [ ptr_q, 'string', 'string', 'string', 'long', ptr_string ]],
-								 'q_update': [ 'bool', [ ptr_q, 'string', 'long' ]],
-								 'q_remove': [ 'bool', [ ptr_q, 'string' ]],
+								 'q_reschedule': [ 'bool', [ ptr_q, 'string', 'long' ]],
+								 'q_cancel': [ 'bool', [ ptr_q, 'string' ]],
 								  // https://github.com/rbranson/node-ffi/issues/76
 								 'q_worker': [ 'void', [ ptr_q, 'string', 'pointer' ] ],
 								 'q_observer': [ 'void', [ ptr_q, 'string', 'pointer' ] ],
@@ -61,19 +61,19 @@ exports.post = function(channel, job)
 	return puid.deref();
 }
 
-exports.update = function(uid, run_at)
+exports.reschedule = function(uid, run_at)
 {
 	if (!pq) return;
 	if (!uid) return;
 	run_at = run_at ? run_at/1000 : 0;
-	return libq.q_update(pq, uid, run_at);
+	return libq.q_reschedule(pq, uid, run_at);
 }
 
-exports.remove = function(uid)
+exports.cancel = function(uid)
 {
 	if (!pq) return;
 	if (!uid) return;
-	return libq.q_remove(pq, uid);
+	return libq.q_cancel(pq, uid);
 }
 
 exports.worker = function(channel, worker)

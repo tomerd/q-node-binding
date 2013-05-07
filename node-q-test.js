@@ -113,7 +113,7 @@ function test3()
 	setTimeout(function()
 	{
 		assert.equal(received, 1, "expected 1");
-		q.update("node2", new Date().getTime() + 4000)
+		q.reschedule("node2", new Date().getTime() + 4000)
 		setTimeout(function()
 		{
 			assert.equal(received, 1, "expected 1");
@@ -155,7 +155,7 @@ function test4()
 	setTimeout(function()
 	{
 		assert.equal(received, 1, "expected 1");
-		q.remove("node2");
+		q.cancel("node2");
 		setTimeout(function()
 		{
 			assert.equal(received, 1, "expected 1");
