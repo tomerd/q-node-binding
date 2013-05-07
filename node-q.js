@@ -55,7 +55,7 @@ exports.post = function(channel, job)
 	if (!job) return;
 	if (!job.data) return;
 	var data = job.data === Object(job.data) ? JSON.stringify(job.data) : job.data;
-	var run_at = job.run_at ? job.run_at/1000 : 0;
+	var run_at = normalize_timestamp(job.run_at);
 	var puid = ref.alloc(ref.types.CString);
 	libq.q_post(pq, channel, job.uid, data, run_at, puid);
 	return puid.deref();
@@ -65,7 +65,7 @@ exports.reschedule = function(uid, run_at)
 {
 	if (!pq) return;
 	if (!uid) return;
-	run_at = run_at ? run_at/1000 : 0;
+	run_at = normalize_timestamp(run_at);
 	return libq.q_reschedule(pq, uid, run_at);
 }
 
@@ -111,3 +111,25 @@ exports.flush = function()
 	libq.q_flush(pq);
 }
 
+function normalize_timestamp(timestamp)
+{
+	if (!timestamp) return 0;
+	if (isNumber(timestamp)) return timestamp/1000;
+	if (isDate(timestamp)) return timestamp.getTime()/1000;	
+	throw new Exception("invalid timestamp")
+}
+
+function is_number(candidate)
+{
+    return is_of_proto(candidate, "[object Number]");
+}
+
+function is_date(candidate)
+{
+    return is_of_proto(candidate, "[object Date]");
+}
+
+function is_of_proto(candidate, proto)
+{
+    return proto === Object.prototype.toString.call(candidate);
+}
