@@ -9,17 +9,17 @@ var ptr_ptr_q = ref.refType(ptr_q);
 
 var ptr_string = ref.refType(ref.types.CString);
 
-var libq = ffi.Library('libq', { 'q_version': [ 'string', [ ] ],
-								 'q_connect': [ 'void', [ ptr_ptr_q, 'string' ] ],
-								 'q_disconnect': [ 'void', [ ptr_q ] ],
-								 'q_post': [ 'void', [ ptr_q, 'string', 'string', 'string', 'long', ptr_string ]],
-								 'q_reschedule': [ 'bool', [ ptr_q, 'string', 'long' ]],
-								 'q_cancel': [ 'bool', [ ptr_q, 'string' ]],
-								  // https://github.com/rbranson/node-ffi/issues/76
-								 'q_worker': [ 'void', [ ptr_q, 'string', 'pointer' ] ],
-								 'q_observer': [ 'void', [ ptr_q, 'string', 'pointer' ] ],
-								 'q_flush': [ 'void', [ ptr_q ] ],	
-								});
+var libq = ffi.Library('libq-1.0', {'q_version': [ 'string', [ ] ],
+									'q_connect': [ 'void', [ ptr_ptr_q, 'string' ] ],
+									'q_disconnect': [ 'void', [ ptr_q ] ],
+									'q_post': [ 'void', [ ptr_q, 'string', 'string', 'string', 'long', ptr_string ]],
+									'q_reschedule': [ 'bool', [ ptr_q, 'string', 'long' ]],
+									'q_cancel': [ 'bool', [ ptr_q, 'string' ]],
+									// https://github.com/rbranson/node-ffi/issues/76
+									'q_worker': [ 'void', [ ptr_q, 'string', 'pointer' ] ],
+									'q_observer': [ 'void', [ ptr_q, 'string', 'pointer' ] ],
+									'q_flush': [ 'void', [ ptr_q ] ],	
+									});
 
 var pq = null;
 var workers=[];
