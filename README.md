@@ -17,6 +17,31 @@ see more about the core library at https://github.com/tomerd/q
 
 ### q bindings for node.js 
 
+q bindings for node.js uses the ffi module to bind to q's native API. q is represented by the node-q module which exposes a simple API:
+
+* *version:* returns the version of q
+
+* *connect(config):* connects to the library and initialized a connection to the backend specified by the config param. see further documentation on backends at the core library.
+
+* *disconnect:* disconnect from the library. no further calls can be made after this.
+
+* *post(queue, job):*/ posts a job to a named queue (aka channel). a job is represented by the simple json.
+	
+	the job's json consists of 3 fields:
+	+ uid (string, optional): a unique identifier for the job, useful if you plan on updating or rescheduling the job.
+	+ data (string): the payload, will be used by the consumer to actually perform the job.
+	+ run_at (date, optional): if you want the job to be scheduled in the future, use this field to specify the target timestamp.
+
+* *reschedule(uid, run_at):* reschedule the job identified by uid to a new target date.
+
+* *cancel(uid):* cancel a scheduled jobs.
+
+* *worker(queue, &delegate):* register a worker [function] for a named queue (aka channel). the worker will start receiving jobs immediately.
+
+* *observer(queue, &delegate):* register an observer [function] for a named queue (aka channel). the observer will start receiving jobs immediately. the difference between an observer and a worker is that the observer is passive in nature and as such is notified only after a
+worker has completed the job successfully.
+
+* *drop:* careful, drops all queues! useful in development scenarios when you need to flush the entire queue system.
 
 ##### usage example
 

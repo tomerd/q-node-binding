@@ -48,16 +48,16 @@ exports.disconnect = function()
 	observers = [];	
 }
 
-exports.post = function(channel, job)
+exports.post = function(queue, job)
 {
 	if (!pq) return;
-	if (!channel) return;
+	if (!queue) return;
 	if (!job) return;
 	if (!job.data) return;
 	var data = job.data === Object(job.data) ? JSON.stringify(job.data) : job.data;
 	var run_at = normalize_timestamp(job.run_at);
 	var puid = ref.alloc(ref.types.CString);
-	libq.q_post(pq, channel, job.uid, data, run_at, puid);
+	libq.q_post(pq, queue, job.uid, data, run_at, puid);
 	return puid.deref();
 }
 
@@ -76,10 +76,10 @@ exports.cancel = function(uid)
 	return libq.q_cancel(pq, uid);
 }
 
-exports.worker = function(channel, worker)
+exports.worker = function(queue, worker)
 {
 	if (!pq) return;
-	if (!channel) return;
+	if (!queue) return;
 	var q_worker = ffi.Callback('void', [ptr_string], function (pdata) 
 	{
 		var data = pdata.deref();
@@ -87,13 +87,13 @@ exports.worker = function(channel, worker)
 	});
 	// https://github.com/rbranson/node-ffi/issues/84
 	workers.push(q_worker);
-	libq.q_worker(pq, channel, q_worker);
+	libq.q_worker(pq, queue, q_worker);
 }
 
-exports.observer = function(channel, observer)
+exports.observer = function(queue, observer)
 {
 	if (!pq) return;
-	if (!channel) return;
+	if (!queue) return;
 	var q_observer = ffi.Callback('void', [ptr_string], function (pdata) 
 	{
 		var data = pdata.deref();
@@ -101,7 +101,7 @@ exports.observer = function(channel, observer)
 	});
 	// https://github.com/rbranson/node-ffi/issues/84	
 	observers.push(q_observer); 
-	libq.q_observer(pq, channel, q_observer);
+	libq.q_observer(pq, queue, q_observer);
 }
 
 // careful, dropes all queues!
