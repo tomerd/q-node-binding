@@ -17,6 +17,9 @@ see more about the core library at https://github.com/tomerd/q
 
 ### q bindings for node.js 
 
+
+##### usage example
+
 	var q = require('./node-q');
 
 	q.connect(	{ driver: 'redis',  host: '127.0.0.1'  });
