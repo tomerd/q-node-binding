@@ -1,7 +1,8 @@
 var assert = require('assert');
 var q = require('./node-q');
 
-var connection_string = { driver: 'redis', host: '127.0.0.1' };
+var connection_string = null;
+//var connection_string = { driver: 'redis', host: '127.0.0.1' };
 
 function test1()
 {
@@ -17,7 +18,7 @@ function test1()
 		var total = 100; //input.toString().trim();
 	
 		q.connect(connection_string);
-		q.flush();
+		q.drop();
 	
 		for (var index=0; index < total; index++)
 		{
@@ -60,7 +61,7 @@ function test2()
 	console.info('using %s', connection_string);
 	
 	q.connect(connection_string);
-	q.flush();
+	q.drop();
 	
 	var received = 0;
 	q.worker("channel1", function(data)
@@ -98,7 +99,7 @@ function test3()
 	console.info('using %s', connection_string);
 	
 	q.connect(connection_string);
-	q.flush();
+	q.drop();
 		
 	var received = 0;
 	q.worker("channel1", function(data)
@@ -140,7 +141,7 @@ function test4()
 	console.info('using %s', connection_string);
 	
 	q.connect(connection_string);
-	q.flush();
+	q.drop();
 		
 	var received = 0;
 	q.worker("channel1", function(data)

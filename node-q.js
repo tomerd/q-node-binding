@@ -18,7 +18,7 @@ var libq = ffi.Library('libq-1.0', {'q_version': [ 'string', [ ] ],
 									// https://github.com/rbranson/node-ffi/issues/76
 									'q_worker': [ 'void', [ ptr_q, 'string', 'pointer' ] ],
 									'q_observer': [ 'void', [ ptr_q, 'string', 'pointer' ] ],
-									'q_flush': [ 'void', [ ptr_q ] ],	
+									'q_drop': [ 'void', [ ptr_q ] ],	
 									});
 
 var pq = null;
@@ -104,11 +104,11 @@ exports.observer = function(channel, observer)
 	libq.q_observer(pq, channel, q_observer);
 }
 
-// careful, flushes the queue!
-exports.flush = function()
+// careful, dropes all queues!
+exports.drop = function()
 {
 	if (!pq) return;
-	libq.q_flush(pq);
+	libq.q_drop(pq);
 }
 
 function normalize_timestamp(timestamp)
